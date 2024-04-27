@@ -7,7 +7,7 @@ const formSchema = Yup.object({
     .max(28, "Username is too long!"),
   password: Yup.string()
     .required("Password required!")
-    .min(6, "Password is too short!")
+    .miˇn(6, "Password is too short!")
     .max(28, "Password is too long!"),
 });
 
