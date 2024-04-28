@@ -1,13 +1,18 @@
 const express = require("express");
 const validateForm = require("../controllers/validateForm");
 const router = express.Router();
+const {
+  handleLogin,
+  attemptLogin,
+  attemptSignUp,
+} = require("../controllers/authController.js");
+const { rateLimiter } = require("../controllers/rateLimiter");
 
-router.post("/login", (req, res) => {
-  validateForm(req, res)
-});
+router
+  .route("/login")
+  .get(handleLogin) // check session
+  .post(validateForm, rateLimiter, attemptLogin);
 
-router.post("/sign-up", (req, res) => {
-    validateForm(req, res)
-  });
+router.post("/sign-up", validateForm, rateLimiter, attemptSignUp);
 
 module.exports = router;
