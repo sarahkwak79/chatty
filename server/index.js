@@ -5,7 +5,13 @@ const helmet = require("helmet");
 const cors = require("cors");
 const authRouter = require("./routers/authRouter");
 const { sessionMiddleware, wrap } = require("./controllers/serverController");
-const { authorizeUser } = require("./controllers/socketController");
+const {
+  authorizeUser,
+  addFriend,
+  initializeUser,
+  onDisconnect,
+  dm
+} = require("./controllers/socketController");
 const server = require("http").createServer(app);
 require("dotenv").config();
 
@@ -27,12 +33,18 @@ app.use(
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use("/auth", authRouter);
-
 io.use(wrap(sessionMiddleware));
 io.use(authorizeUser);
 io.on("connect", (socket) => {
-  console.log(socket.id);
-  console.log(socket.request.session.user.username);
+  initializeUser(socket);
+
+  socket.on("add_friend", (friendName, cb) => {
+    addFriend(socket, friendName, cb);
+  });
+
+  socket.on("dm", (message) => dm(socket, message));
+
+  socket.on("disconnecting", () => onDisconnect(socket));
 });
 
 server.listen(4000, () => {
