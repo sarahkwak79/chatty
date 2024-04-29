@@ -4,12 +4,12 @@ import { Input } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useContext } from "react";
 import * as Yup from "yup";
-import socket from "../../socket";
-import {MessagesContext} from "./Home"
+import { MessagesContext, SocketContext } from "./Home";
 
-const ChatBox = ({userid}) => {
-    const { setMessages } = useContext(MessagesContext)
-
+const ChatBox = ({ userid }) => {
+  const { setMessages } = useContext(MessagesContext);
+  const { socket } = useContext(SocketContext);
+  
   return (
     <Formik
       initialValues={{ message: "" }}
@@ -17,9 +17,9 @@ const ChatBox = ({userid}) => {
         message: Yup.string().min(1).max(255),
       })}
       onSubmit={(values, actions) => {
-        const message = {to: userid,from: null, content: values.message}
-        socket.emit("dm", message)
-        setMessages(prevMsgs => [message, ... prevMsgs])
+        const message = { to: userid, from: null, content: values.message };
+        socket.emit("dm", message);
+        setMessages((prevMsgs) => [message, ...prevMsgs]);
         actions.resetForm();
       }}
     >
@@ -31,7 +31,9 @@ const ChatBox = ({userid}) => {
           size="lg"
           autoComplete="off"
         />
-        <Button type="submit" size="lg" colorScheme="teal">Send</Button>
+        <Button type="submit" size="lg" colorScheme="teal">
+          Send
+        </Button>
       </HStack>
     </Formik>
   );

@@ -1,17 +1,23 @@
-const { default: socket } = require("../../client/src/socket");
 const redisClient = require("../redis");
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 module.exports.authorizeUser = (socket, next) => {
-  if (!socket.request.session || !socket.request.session.user) {
-    console.log("Bad request");
-    next(new Error("Not authorized"));
-  } else {
-    next();
-  }
+  const token = socket.handshake.auth.token;
+  console.log(token);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      console.log("Bad request!", err);
+      next(new Error("Not authorized"));
+    } else {
+      socket.user = { ...decoded };
+      next();
+    }
+  });
 };
 
 module.exports.initializeUser = async (socket) => {
-  socket.user = { ...socket.request.session.user }; // get userid from session into socket io
   socket.join(socket.user.userid);
   await redisClient.hset(
     `userid:${socket.user.username}`,
@@ -53,24 +59,24 @@ module.exports.initializeUser = async (socket) => {
 
 module.exports.addFriend = async (socket, friendName, cb) => {
   if (friendName === socket.user.username) {
-    cb({ done: false, errorMsg: "Connot add yourself!" });
+    cb({ done: false, errorMsg: "Cannot add yourself!" });
     return;
   }
-
   const friend = await redisClient.hgetall(`userid:${friendName}`);
   const currentFriendList = await redisClient.lrange(
     `friends:${socket.user.username}`,
     0,
     -1
   );
-
-  if (!friend) {
+  if (!friend.userid) {
     cb({ done: false, errorMsg: "User doesn't exist!" });
     return;
   }
-
-  if (currentFriendList && currentFriendList.indexOf(friendName) !== -1) {
-    cb({ done: false, errorMsg: "Friend is alread added!" });
+  if (
+    currentFriendList &&
+    currentFriendList.indexOf(`${friendName}.${friend.userid}`) !== -1
+  ) {
+    cb({ done: false, errorMsg: "Friend already added!" });
     return;
   }
 
@@ -84,7 +90,6 @@ module.exports.addFriend = async (socket, friendName, cb) => {
     userid: friend.userid,
     connected: friend.connected,
   };
-
   cb({ done: true, newFriend });
 };
 

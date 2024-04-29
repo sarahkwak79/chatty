@@ -12,13 +12,14 @@ import {
 import { Form, Formik } from "formik";
 import TextField from "../TextField";
 import { friendSchema } from "@chat-app/common";
-import socket from "../../socket";
 import { useContext, useState } from "react";
-import { FriendContext } from "./Home";
+import { FriendContext, SocketContext } from "./Home";
 
 const AddFriend = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const { setFriendList } = useContext(FriendContext);
+  const { socket } = useContext(SocketContext);
+  
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
