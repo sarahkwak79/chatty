@@ -9,7 +9,7 @@ import { MessagesContext, SocketContext } from "./Home";
 const ChatBox = ({ userid }) => {
   const { setMessages } = useContext(MessagesContext);
   const { socket } = useContext(SocketContext);
-  
+
   return (
     <Formik
       initialValues={{ message: "" }}
@@ -31,7 +31,7 @@ const ChatBox = ({ userid }) => {
           size="lg"
           autoComplete="off"
         />
-        <Button type="submit" size="lg" colorScheme="teal">
+        <Button type="submit" size="lg" colorScheme="blue">
           Send
         </Button>
       </HStack>

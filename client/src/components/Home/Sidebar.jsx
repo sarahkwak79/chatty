@@ -28,8 +28,8 @@ const Sidebar = () => {
   return (
     <div key={key}>
       <VStack py="1.4rem">
-        <HStack justify="space-evenly" w="100%">
-          <Heading size="md">Add Friend</Heading>
+        <HStack justify="center" w="100%">
+          <Heading size="md" pr="1rem" >Add Friend</Heading>
           <Button onClick={onOpen}>
             <ChatIcon />
           </Button>

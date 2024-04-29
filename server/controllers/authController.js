@@ -42,7 +42,7 @@ module.exports.attemptLogin = async (req, res) => {
           userid: potentialLogin.rows[0].userid,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "2min" },
+        { expiresIn: "7d" },
         (err, token) => {
           if (err) {
             res.json({

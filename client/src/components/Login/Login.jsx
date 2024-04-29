@@ -72,7 +72,7 @@ const Login = () => {
         />
 
         <ButtonGroup pt="1rem">
-          <Button colorScheme="teal" type="submit">
+          <Button colorScheme="blue" type="submit">
             Log In
           </Button>
           <Button onClick={() => navigate("/sign-up")}>Create Account</Button>

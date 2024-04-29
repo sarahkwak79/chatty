@@ -38,10 +38,10 @@ const Chat = ({ userid }) => {
                   maxW="50%"
                   key={`msg:${friend.username}.${idx}`}
                   fontSize="md"
-                  bg={message.to === friend.userid ? "blue.100" : "gray.100"}
+                  bg={message.to === friend.userid ? "blue.200" : "gray.100"}
                   color="gray.800"
                   borderRadius="10px"
-                  p="0.5rem 1rem"
+                  p="0.4rem 0.7rem"
                 >
                   {message.content}
                 </Text>
