@@ -14,6 +14,7 @@
     "helmet": "^7.1.0",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
+    "openai": "^4.63.0",
     "pg": "^8.11.5",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1"
